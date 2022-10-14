@@ -1,0 +1,15 @@
+version: v1
+plugins:
+  - name: ts
+    out: ./src/gen/ts
+    strategy: all
+    path: ./node_modules/ts-proto/protoc-gen-ts_proto
+    opt:
+      - outputServices=nice-grpc,outputServices=generic-definitions
+      - useExactTypes=false
+      - outputSchema=true
+      - forceLong=string
+      - env=node
+      - outputClientImpl=false
+      - returnObservable=false
+      - useAsyncIterable=true

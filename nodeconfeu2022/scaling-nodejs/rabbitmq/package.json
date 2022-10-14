@@ -1,0 +1,15 @@
+{
+  "name": "helpers",
+  "private": true,
+  "scripts": {
+    "up": "docker compose up -d",
+    "down": "docker compose down",
+    "simple": "docker compose run perf_test_simple",
+    "test-15": "docker compose run perf_test_15",
+    "test-17": "docker compose run perf_test_17",
+    "clinic-test-15": "docker compose run perf_test_clinic_15",
+    "clinic-test-17": "docker compose run perf_test_clinic_17",
+    "clinic-15": "docker compose exec consumer_15_clinic kill -s SIGINT $(docker compose exec consumer_15_clinic ps aux | tail -n 2 | head -n 1 | awk '{print $1}') && sleep 5 && open `docker compose logs consumer_15_clinic | tail -n 1 | awk '{print $7}' | awk -F'file:///src/' '{print \"transport-amqp-15/\"$2}'`",
+    "clinic-17": "docker compose exec consumer_17_clinic kill -s SIGINT $(docker compose exec consumer_17_clinic ps aux | tail -n 2 | head -n 1 | awk '{print $1}') && sleep 5 && open `docker compose logs consumer_17_clinic | tail -n 1 | awk '{print $7}' | awk -F'file:///src/' '{print \"transport-amqp-17/\"$2}'`"
+  }
+}

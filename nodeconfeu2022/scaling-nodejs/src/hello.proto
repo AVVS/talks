@@ -1,0 +1,15 @@
+syntax = "proto3";
+package helloworld;
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply); // unary
+	rpc BiDiGreetings(stream HelloRequest) returns (stream HelloReply); // bidirectional
+}
+
+message HelloRequest {
+   string who = 1;
+}
+
+message HelloReply {
+    string hello = 1;
+}

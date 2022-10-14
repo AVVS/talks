@@ -1,0 +1,18 @@
+{
+  "name": "transport-amqp-15",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@microfleet/transport-amqp": "15"
+  },
+  "devDependencies": {
+    "clinic": "^12.0.0"
+  }
+}

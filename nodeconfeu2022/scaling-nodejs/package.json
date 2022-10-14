@@ -1,0 +1,29 @@
+{
+		"name": "demo-grpc-fastify",
+		"scripts": {
+				"start:fastify": "exec node ./src/fastify.mjs",
+				"start:grpc": "./node_modules/.bin/tsc && exec node ./lib/grpc.js",
+				"start:clinic:grpc": "./node_modules/.bin/tsc && exec ./node_modules/.bin/clinic flame -- node ./lib/grpc.js",
+				"start:clinic:fastify": "exec ./node_modules/.bin/clinic flame -- node ./src/fastify.mjs",
+				"test:fastify": "autocannon http://localhost:9999?who=nodeconf",
+				"test:grpc:unary": "ghz --insecure --proto ./src/hello.proto --call helloworld.Greeter.SayHello -d '{\"who\":\"nodeconf\"}' -n 300000 --connections 1 --count-errors --timeout 0 0.0.0.0:8080",
+				"test:grpc:bidi": "ghz --insecure --proto ./src/hello.proto --call helloworld.Greeter.BiDiGreetings -d '{\"who\":\"{{ randomString 8 }}\"}' --stream-dynamic-messages --stream-call-count=1000 --stream-call-duration=10s -z 10s --count-errors 0.0.0.0:8080 | grep 'Requests/sec' | awk '{print \"Requests/sec: ~\" $2 * 1000}'"
+		},
+		"dependencies": {
+				"@grpc/grpc-js": "^1.7.1",
+				"fastify": "^4.8.1",
+				"long": "^5.2.0",
+				"nice-grpc": "^2.0.0",
+				"nice-grpc-common": "^2.0.0",
+				"protobufjs": "^7.1.2",
+				"ts-proto-descriptors": "^1.7.1"
+		},
+		"devDependencies": {
+				"autocannon": "^7.10.0",
+				"clinic": "^12.0.0",
+				"eslint": "^8.25.0",
+				"eslint-config-makeomatic": "^5.1.0",
+				"ts-proto": "^1.128.0",
+				"typescript": "^4.8.4"
+		}
+}

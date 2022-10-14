@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    volumes:
+      - ./files/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+    ports:
+      - "15672:15672"
+  
+  consumer_15:
+    image: node:18-alpine
+    working_dir: /src
+    volumes:
+      - ./transport-amqp-15:/src
+    environment:
+      - NODE_ENV=production
+    command: node ./src/index.mjs
+
+  consumer_17:
+    image: node:18-alpine
+    working_dir: /src
+    volumes:
+      - ./transport-amqp-17:/src
+    environment:
+      - NODE_ENV=production
+    command: node ./src/index.mjs
+  
+  consumer_15_clinic:
+    image: node:18-alpine
+    working_dir: /src
+    volumes:
+      - ./transport-amqp-15:/src
+    environment:
+      - NODE_ENV=production
+      - QUEUE=clinic-15
+      - NO_INSIGHT=true
+    command: ./node_modules/.bin/clinic flame -- node ./src/index.mjs
+
+  consumer_17_clinic:
+    image: node:18-alpine
+    working_dir: /src
+    volumes:
+      - ./transport-amqp-17:/src
+    environment:
+      - NODE_ENV=production
+      - QUEUE=clinic-17
+      - NO_INSIGHT=true
+    command: ./node_modules/.bin/clinic flame -- node ./src/index.mjs
+
+  perf_test_simple:
+    image: pivotalrabbitmq/perf-test
+    command: --uri amqp://rabbitmq -z 10 --json-body --size 1000
+    profiles:
+      - test-simple
+  
+  perf_test_clinic_15:
+    image: pivotalrabbitmq/perf-test
+    command: --uri amqp://rabbitmq -z 15 --rate 25000 --consumers 0 --json-body --size 1000 --predeclared --routing-key clinic-15 --queue clinic-15 --use-millis -e node-services
+    profiles:
+      - test-simple
+  
+  perf_test_clinic_17:
+    image: pivotalrabbitmq/perf-test
+    command: --uri amqp://rabbitmq -z 15 --rate 70000 --consumers 0 --json-body --size 1000 --predeclared --routing-key clinic-17 --queue clinic-17 --use-millis -e node-services
+    profiles:
+      - test-simple
+
+  perf_test_15:
+    image: pivotalrabbitmq/perf-test
+    command: --uri amqp://rabbitmq -z 15 --rate 31000 --consumers 0 --json-body --size 1000 --predeclared --routing-key test-15 --queue test-15 --use-millis -e node-services
+    profiles:
+      - test-simple
+  
+  perf_test_17:
+    image: pivotalrabbitmq/perf-test
+    command: --uri amqp://rabbitmq -z 15 --rate 90000 --consumers 0 --json-body --size 1000 --predeclared --routing-key test-17 --queue test-17 --use-millis -e node-services
+    profiles:
+      - test-simple

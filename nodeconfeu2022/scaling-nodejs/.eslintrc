@@ -1,0 +1,11 @@
+{
+  "extends": "makeomatic/typescript",
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "require-yield": 0,
+    "@typescript-eslint/no-unused-vars": 0,
+    "no-console": 0
+  }
+}
