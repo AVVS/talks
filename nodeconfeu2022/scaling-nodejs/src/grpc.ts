@@ -5,7 +5,9 @@ import {
   HelloReply
 } from './gen/ts/src/hello'
 
-const server = createServer()
+const server = createServer({
+  'grpc.enable_channelz': 0
+})
 
 const impl: GreeterServiceImplementation = {
   async sayHello(req, ctx): Promise<HelloReply> {

@@ -3,7 +3,7 @@
 		"scripts": {
 				"start:fastify": "exec node ./src/fastify.mjs",
 				"start:grpc": "./node_modules/.bin/tsc && exec node ./lib/grpc.js",
-				"start:clinic:grpc": "./node_modules/.bin/tsc && exec ./node_modules/.bin/clinic flame -- node ./lib/grpc.js",
+				"start:clinic:grpc": "./node_modules/.bin/tsc && exec ./node_modules/.bin/clinic flame -- node ./lib/grpc-raw.js",
 				"start:clinic:fastify": "exec ./node_modules/.bin/clinic flame -- node ./src/fastify.mjs",
 				"test:fastify": "autocannon http://localhost:9999?who=nodeconf",
 				"test:grpc:unary": "ghz --insecure --proto ./src/hello.proto --call helloworld.Greeter.SayHello -d '{\"who\":\"nodeconf\"}' -n 300000 --connections 1 --count-errors --timeout 0 0.0.0.0:8080",

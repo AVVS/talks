@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { CallContext, CallOptions } from "nice-grpc-common";
+import { handleBidiStreamingCall, handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto } from "ts-proto-descriptors";
 
@@ -171,50 +171,35 @@ export const HelloReply = {
   },
 };
 
-export type GreeterDefinition = typeof GreeterDefinition;
-export const GreeterDefinition = {
-  name: "Greeter",
-  fullName: "helloworld.Greeter",
-  methods: {
-    /** unary */
-    sayHello: {
-      name: "SayHello",
-      requestType: HelloRequest,
-      requestStream: false,
-      responseType: HelloReply,
-      responseStream: false,
-      options: {},
-    },
-    /** bidirectional */
-    biDiGreetings: {
-      name: "BiDiGreetings",
-      requestType: HelloRequest,
-      requestStream: true,
-      responseType: HelloReply,
-      responseStream: true,
-      options: {},
-    },
+export type GreeterService = typeof GreeterService;
+export const GreeterService = {
+  /** unary */
+  sayHello: {
+    path: "/helloworld.Greeter/SayHello",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: HelloRequest) => Buffer.from(HelloRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => HelloRequest.decode(value),
+    responseSerialize: (value: HelloReply) => Buffer.from(HelloReply.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => HelloReply.decode(value),
+  },
+  /** bidirectional */
+  biDiGreetings: {
+    path: "/helloworld.Greeter/BiDiGreetings",
+    requestStream: true,
+    responseStream: true,
+    requestSerialize: (value: HelloRequest) => Buffer.from(HelloRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => HelloRequest.decode(value),
+    responseSerialize: (value: HelloReply) => Buffer.from(HelloReply.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => HelloReply.decode(value),
   },
 } as const;
 
-export interface GreeterServiceImplementation<CallContextExt = {}> {
+export interface GreeterServer extends UntypedServiceImplementation {
   /** unary */
-  sayHello(request: HelloRequest, context: CallContext & CallContextExt): Promise<DeepPartial<HelloReply>>;
+  sayHello: handleUnaryCall<HelloRequest, HelloReply>;
   /** bidirectional */
-  biDiGreetings(
-    request: AsyncIterable<HelloRequest>,
-    context: CallContext & CallContextExt,
-  ): ServerStreamingMethodResult<DeepPartial<HelloReply>>;
-}
-
-export interface GreeterClient<CallOptionsExt = {}> {
-  /** unary */
-  sayHello(request: DeepPartial<HelloRequest>, options?: CallOptions & CallOptionsExt): Promise<HelloReply>;
-  /** bidirectional */
-  biDiGreetings(
-    request: AsyncIterable<DeepPartial<HelloRequest>>,
-    options?: CallOptions & CallOptionsExt,
-  ): AsyncIterable<HelloReply>;
+  biDiGreetings: handleBidiStreamingCall<HelloRequest, HelloReply>;
 }
 
 type ProtoMetaMessageOptions = {
@@ -345,5 +330,3 @@ export type DeepPartial<T> = T extends Builtin ? T
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
-
-export type ServerStreamingMethodResult<Response> = { [Symbol.asyncIterator](): AsyncIterator<Response, void> };

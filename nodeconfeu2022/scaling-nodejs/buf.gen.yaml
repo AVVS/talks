@@ -13,3 +13,17 @@ plugins:
       - outputClientImpl=false
       - returnObservable=false
       - useAsyncIterable=true
+  
+  - name: ts-generic
+    out: ./src/gen-grpc/ts
+    strategy: all
+    path: ./node_modules/ts-proto/protoc-gen-ts_proto
+    opt:
+      - outputServices=grpc-js
+      - useExactTypes=false
+      - outputSchema=true
+      - forceLong=string
+      - env=node
+      - outputClientImpl=false
+      - returnObservable=false
+      - useAsyncIterable=true
